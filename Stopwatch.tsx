@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, FlatList, ListRenderItem, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  FlatList,
+  ListRenderItem,
+  ScrollView
+} from 'react-native';
 import { Stopwatch } from 'react-native-stopwatch-timer';
 
 type Interval = {
