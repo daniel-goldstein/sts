@@ -19,7 +19,12 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.danielgoldsteincompany.sts"
+      "bundleIdentifier": "com.danielgoldsteincompany.sts",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.897566529757-qs9hn4k1dvp56ef6k50niumth6csp52i"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
