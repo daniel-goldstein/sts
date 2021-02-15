@@ -100,6 +100,7 @@ const ScoreStopwatch = () => {
 
         <TouchableOpacity
           style={styles.button}
+          disabled={!timerGoing}
           onPressIn={startInterval}
           onPressOut={endInterval}>
           <Text>Press me!!</Text>
