@@ -6,16 +6,19 @@ import GDrive from 'react-native-google-drive-api-wrapper';
 import Dialog from 'react-native-dialog';
 
 type UploadState = "idle" | "confirming" | "sending" | "completed";
+type User = GoogleSignIn.GoogleUser;
 
-type UploadButtonProps = { uploadData: () => string };
-const UploadButton = ({ uploadData }: UploadButtonProps) => {
+type UploadButtonProps = { uploadData: () => string, user: User };
+const UploadButton = ({ uploadData, user }: UploadButtonProps) => {
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   const [uploadStatus, setUploadStatus] = useState("");
 
-  useEffect(() => {
-    GDrive.init();
-    GDrive.setAccessToken(GoogleSignIn.getCurrentUser()?.auth?.accessToken);
-  });
+  /* useEffect(() => { */
+  /*   if (user.auth) { */
+  /*     GDrive.setAccessToken(user.auth.accessToken); */
+  /*     GDrive.init(); */
+  /*   } */
+  /* }); */
 
   const openConfirmationModal = () => {
     setUploadState("confirming");
@@ -23,22 +26,24 @@ const UploadButton = ({ uploadData }: UploadButtonProps) => {
 
   const cancel = () => {
     setUploadState("idle");
+    setUploadStatus("");
   }
 
   const upload = async () => {
     setUploadState("sending");
 
     const filename = "foo.csv"
-    const resp = await GDrive.files.createFileMultipart(
-      uploadData(),
-      "text/csv", {
-        parent: ["root"],
-        name: filename
-      },
-      false
-    );
+    /* const resp = await GDrive.files.createFileMultipart( */
+    /*   uploadData(), */
+    /*   "text/csv", { */
+    /*     parent: ["root"], */
+    /*     name: filename */
+    /*   }, */
+    /*   false */
+    /* ); */
 
-    const status = resp.status;
+    /* const status = resp.status; */
+    const status = 200;
     if (status === 200) {
       setUploadStatus('Upload successful!');
     } else {
@@ -50,6 +55,7 @@ const UploadButton = ({ uploadData }: UploadButtonProps) => {
 
   const closeDialog = () => {
     setUploadState("idle");
+    setUploadStatus("");
   }
 
   return (

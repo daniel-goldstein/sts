@@ -28,7 +28,7 @@ const Item = ({ title }: ItemProps) => {
   );
 }
 
-const ScoreStopwatch = () => {
+const ScoreStopwatch = ({ user }) => {
   const [timerGoing, setStopwatchGoing] = useState(false);
   const [timerReset, setStopwatchReset] = useState(false);
   const [pressStart, setPressStart] = useState<MaybeNumber>(0);
@@ -82,7 +82,7 @@ const ScoreStopwatch = () => {
   return (
     <View style={styles.container}>
 
-      <UploadButton uploadData={csvData} />
+      <UploadButton user={user} uploadData={csvData} />
       <CurrentPress start={pressStart} />
 
       <View style={styles.countContainer}>

@@ -4,14 +4,14 @@ import {
 } from 'react-native';
 import * as GoogleSignIn from 'expo-google-sign-in';
 import { IOS_CLIENT_ID } from '@env';
+import ScoreStopwatch from './Stopwatch';
 
 type User = GoogleSignIn.GoogleUser;
 type MaybeUser = User | null;
 
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
-const Auth = ({ children }) => {
-
+const Auth = () => {
   const [user, setUser] = useState<MaybeUser>(null);
 
   const syncUser = () => {
@@ -28,23 +28,20 @@ const Auth = ({ children }) => {
   const signIn = async () => {
     try {
       await GoogleSignIn.askForPlayServicesAsync();
-      const { type } = await GoogleSignIn.signInAsync();
-      if (type === 'success') {
-        syncUser();
+      const { type, user } = await GoogleSignIn.signInAsync();
+      if (type === 'success' && user) {
+        setUser(user);
       }
     } catch ({ message }) {
       alert(`Login failed: ${message}`);
     }
   }
 
-  return (
-    user ?
-    <>
-      {children}
-    </>
-    :
-    <Text onPress={signIn}>Sign in</Text>
-  );
+  if (user !== null) {
+    return <ScoreStopwatch user={user} />;
+  }
+
+  return <Text onPress={signIn}>Sign in</Text>;
 }
 
 export default Auth;
