@@ -21,6 +21,7 @@ const Auth = ({ children }) => {
   useEffect(() => {
     GoogleSignIn.initAsync({
       clientId: IOS_CLIENT_ID,
+      scopes: SCOPES,
     }).then(syncUser);
   });
 

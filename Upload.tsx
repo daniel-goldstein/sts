@@ -28,7 +28,7 @@ const UploadButton = ({ uploadData }: UploadButtonProps) => {
   const upload = async () => {
     setUploadState("sending");
 
-    const filename = "foo.csv" // TODO
+    const filename = "foo.csv"
     const resp = await GDrive.files.createFileMultipart(
       uploadData(),
       "text/csv", {
