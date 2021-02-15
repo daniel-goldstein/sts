@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as GoogleSignIn from 'expo-google-sign-in';
@@ -13,13 +13,7 @@ const UploadButton = ({ uploadData, user }: UploadButtonProps) => {
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   const [uploadStatus, setUploadStatus] = useState("");
 
-  /* useEffect(() => { */
-  /*   if (user.auth) { */
-  /*     GDrive.setAccessToken(user.auth.accessToken); */
-  /*     GDrive.init(); */
-  /*   } */
-  /* }); */
-
+  // TODO Rename to submitting
   const openConfirmationModal = () => {
     setUploadState("confirming");
   }
@@ -33,21 +27,25 @@ const UploadButton = ({ uploadData, user }: UploadButtonProps) => {
     setUploadState("sending");
 
     const filename = "foo.csv"
-    /* const resp = await GDrive.files.createFileMultipart( */
-    /*   uploadData(), */
-    /*   "text/csv", { */
-    /*     parent: ["root"], */
-    /*     name: filename */
-    /*   }, */
-    /*   false */
-    /* ); */
+    if (user.auth) {
+      GDrive.setAccessToken(user.auth.accessToken);
+      GDrive.init();
+      const resp = await GDrive.files.createFileMultipart(
+        uploadData(),
+        "text/csv", {
+          parent: ["root"],
+          name: filename
+        },
+        false
+      );
 
-    /* const status = resp.status; */
-    const status = 200;
-    if (status === 200) {
-      setUploadStatus('Upload successful!');
+      if (resp.status === 200) {
+        setUploadStatus('Upload successful!');
+      } else {
+        setUploadStatus(`Uh Oh! There was an error: ${JSON.stringify(resp)}`);
+      }
     } else {
-      setUploadStatus(`Uh Oh! There was an error with status code: ${status}`);
+      setUploadStatus("Uh Oh! You weren't authenticated for some reason...");
     }
 
     setUploadState("completed");
@@ -69,7 +67,8 @@ const UploadButton = ({ uploadData, user }: UploadButtonProps) => {
         <Dialog.Container visible={true}>
           <Dialog.Title>Submit Data</Dialog.Title>
           <Dialog.Description>
-            Do you want to Score That Shit?
+            {user.auth.accessToken}
+            {/* Do you want to Score That Shit? */}
           </Dialog.Description>
           <Dialog.Input placeholder="filename" />
           <Dialog.Button label="Cancel" onPress={cancel}/>
@@ -78,7 +77,7 @@ const UploadButton = ({ uploadData, user }: UploadButtonProps) => {
       </View>
       :
       <View>
-        <Dialog.Container visible={uploadState === "completed"}>
+        <Dialog.Container visible={uploadState === "completed" || uploadState === "sending"}>
           {/* Awful hack */}
           <Dialog.Title>{uploadState === "idle" ? "" : uploadState}</Dialog.Title>
           <Dialog.Description>
