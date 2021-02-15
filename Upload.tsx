@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as GoogleSignIn from 'expo-google-sign-in';
 import GDrive from 'react-native-google-drive-api-wrapper';
@@ -76,6 +76,7 @@ const UploadButton = ({ uploadData }: UploadButtonProps) => {
           {/* Awful hack */}
           <Dialog.Title>{uploadState === "idle" ? "" : uploadState}</Dialog.Title>
           <Dialog.Description>
+            {uploadStatus}
           </Dialog.Description>
           <Dialog.Button label="Close" onPress={closeDialog}/>
         </Dialog.Container>
