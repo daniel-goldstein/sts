@@ -10,6 +10,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Stopwatch } from 'react-native-stopwatch-timer';
+import UploadButton from './Upload';
 
 type Interval = {
   start: number,
@@ -18,7 +19,8 @@ type Interval = {
 
 type MaybeNumber = number | null;
 
-const Item = ({ title }: { title: string }) => {
+type ItemProps = { title: string };
+const Item = ({ title }: ItemProps) => {
   return (
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
@@ -55,6 +57,12 @@ const ScoreStopwatch = () => {
     }
   }
 
+  const csvData = () => {
+    const headers = 'start,end';
+    const data = presses.reverse().map(({ start, end }) => `${start},${end}`).join('\n');
+    return headers + '\n' + data;
+  }
+
   const fmtMillis = (msec: number) => `${msec / 1000}s`
 
   const renderInterval: ListRenderItem<Interval> = ({ item }) => {
@@ -74,6 +82,7 @@ const ScoreStopwatch = () => {
   return (
     <View style={styles.container}>
 
+      <UploadButton uploadData={csvData} />
       <CurrentPress start={pressStart} />
 
       <View style={styles.countContainer}>
