@@ -28,7 +28,8 @@ const Item = ({ title }: ItemProps) => {
   );
 }
 
-const ScoreStopwatch = ({ user }) => {
+type ScoreStopwatchProps = { accessToken: string };
+const ScoreStopwatch = ({ accessToken }: ScoreStopwatchProps) => {
   const [timerGoing, setStopwatchGoing] = useState(false);
   const [timerReset, setStopwatchReset] = useState(false);
   const [pressStart, setPressStart] = useState<MaybeNumber>(0);
@@ -82,7 +83,7 @@ const ScoreStopwatch = ({ user }) => {
   return (
     <View style={styles.container}>
 
-      <UploadButton user={user} uploadData={csvData} />
+      <UploadButton accessToken={accessToken} uploadData={csvData} />
       <CurrentPress start={pressStart} />
 
       <View style={styles.countContainer}>
@@ -103,7 +104,7 @@ const ScoreStopwatch = ({ user }) => {
           disabled={!timerGoing}
           onPressIn={startInterval}
           onPressOut={endInterval}>
-          <Text>Press me!!</Text>
+          <Text style={styles.title}>Press me!!</Text>
         </TouchableOpacity>
       </View>
 
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: "#55ee88",
+    backgroundColor: "#55dc88",
     padding: 15,
     width: '100%',
   },
@@ -145,6 +146,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+    fontFamily: "HelveticaNeue",
   },
   timeList: {
     height: '50%',
@@ -156,12 +158,13 @@ const stopwatchOptions = {
     backgroundColor: '#000',
     borderRadius: 5,
     width: '100%',
-    alignItems: "center"
+    alignItems: "center",
   },
   text: {
     fontSize: 30,
     color: '#FFF',
     marginLeft: 7,
+    fontFamily: "HelveticaNeue-Thin",
   }
 };
 

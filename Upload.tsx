@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import * as GoogleSignIn from 'expo-google-sign-in';
-import GDrive from 'react-native-google-drive-api-wrapper';
 import Dialog from 'react-native-dialog';
+import { uploadFile } from './GDrive';
 
-type UploadState = "idle" | "confirming" | "sending" | "completed";
-type User = GoogleSignIn.GoogleUser;
+type UploadState = "idle" | "uploading" | "sending" | "completed";
 
-type UploadButtonProps = { uploadData: () => string, user: User };
-const UploadButton = ({ uploadData, user }: UploadButtonProps) => {
+type UploadButtonProps = { uploadData: () => string, accessToken: string };
+const UploadButton = ({ uploadData, accessToken }: UploadButtonProps) => {
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   const [uploadStatus, setUploadStatus] = useState("");
+  const [filename, setFilename] = useState("");
 
-  // TODO Rename to submitting
   const openConfirmationModal = () => {
-    setUploadState("confirming");
+    setUploadState("uploading");
   }
 
   const cancel = () => {
@@ -26,23 +24,12 @@ const UploadButton = ({ uploadData, user }: UploadButtonProps) => {
   const upload = async () => {
     setUploadState("sending");
 
-    const filename = "foo.csv"
-    if (user.auth) {
-      GDrive.setAccessToken(user.auth.accessToken);
-      GDrive.init();
-      const resp = await GDrive.files.createFileMultipart(
-        uploadData(),
-        "text/csv", {
-          parent: ["root"],
-          name: filename
-        },
-        false
-      );
-
+    if (accessToken != "") {
+      const resp = await uploadFile(filename, uploadData(), accessToken);
       if (resp.status === 200) {
         setUploadStatus('Upload successful!');
       } else {
-        setUploadStatus(`Uh Oh! There was an error: ${JSON.stringify(resp)}`);
+        setUploadStatus(`Uh Oh! There was an error: ${resp.json()}`);
       }
     } else {
       setUploadStatus("Uh Oh! You weren't authenticated for some reason...");
@@ -62,15 +49,14 @@ const UploadButton = ({ uploadData, user }: UploadButtonProps) => {
         <AntDesign name="upload" size={24} color="black" />
       </TouchableOpacity>
 
-      {uploadState === "confirming" ?
+      {uploadState === "uploading" ?
       <View>
         <Dialog.Container visible={true}>
           <Dialog.Title>Submit Data</Dialog.Title>
           <Dialog.Description>
-            {user.auth.accessToken}
-            {/* Do you want to Score That Shit? */}
+            Do you want to Score That Shit?
           </Dialog.Description>
-          <Dialog.Input placeholder="filename" />
+          <Dialog.Input placeholder="filename" onChangeText={setFilename}/>
           <Dialog.Button label="Cancel" onPress={cancel}/>
           <Dialog.Button label="Upload" onPress={upload}/>
         </Dialog.Container>

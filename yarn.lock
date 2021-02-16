@@ -1056,7 +1056,7 @@
     "@babel/preset-env" "^7.4.4"
     "@babel/preset-typescript" "^7.3.3"
 
-"@expo/config-plugins@1.0.18":
+"@expo/config-plugins@~1.0.13", "@expo/config-plugins@1.0.18":
   "integrity" "sha512-8Ey+22cEAOxK+SBJY+OazaLsPyL5FXdsykfBg/QQJE2Y/DTFebUVlr5bQyeqavbASDvmDxg3Fd71A8Se8+qT1g=="
   "resolved" "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-1.0.18.tgz"
   "version" "1.0.18"
@@ -1568,6 +1568,13 @@
   dependencies:
     "@babel/runtime" "^7.7.2"
     "regenerator-runtime" "^0.13.3"
+
+"@react-native-async-storage/async-storage@^1.13.4":
+  "integrity" "sha512-P7cbA77XNhUFEBKAIaex17mKI/Db1RQHZVwplagskqzEnpqB+Yi+/l8QeOMr5OJdfmPkBA+V7DOmuWeB8Po6cQ=="
+  "resolved" "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.13.4.tgz"
+  "version" "1.13.4"
+  dependencies:
+    "deep-assign" "^3.0.0"
 
 "@react-native-community/cli-debugger-ui@^4.13.1":
   "integrity" "sha512-UFnkg5RTq3s2X15fSkrWY9+5BKOFjihNSnJjTV2H5PtTUFbd55qnxxPw8CxSfK0bXb1IrSvCESprk2LEpqr5cg=="
@@ -2993,6 +3000,21 @@
     "snapdragon" "^0.8.1"
     "to-regex" "^3.0.1"
 
+"expo-app-auth@^10.0.0":
+  "integrity" "sha512-b4pdcCYqkx0BAPzH7GQ/mJWYJcR7vnQ0QE0d2V36meTx75j/CZrcgkwtD+aSEbkbdcDeVMyUekzCCAp9ACmcWw=="
+  "resolved" "https://registry.npmjs.org/expo-app-auth/-/expo-app-auth-10.0.0.tgz"
+  "version" "10.0.0"
+  dependencies:
+    "@expo/config-plugins" "~1.0.13"
+    "invariant" "^2.2.4"
+
+"expo-app-auth@~9.3.0":
+  "integrity" "sha512-f8OdQDNmC5vSdBWzwtic5pq+bmtSCYGU1KeVhKV3W8VgGIgVx40Q72q3M+SMs68bz4RCuC1g7LOGTOBWzXIuNw=="
+  "resolved" "https://registry.npmjs.org/expo-app-auth/-/expo-app-auth-9.3.0.tgz"
+  "version" "9.3.0"
+  dependencies:
+    "invariant" "^2.2.4"
+
 "expo-application@~2.4.1":
   "integrity" "sha512-VHDvXz55LIYdLoE1aR0AFycB1jz4ggbMToUbKAbCEjro+PdUNm/Gj8gQeFgH6wL2oAztQH4qJ+uiOwrw8SFK+Q=="
   "resolved" "https://registry.yarnpkg.com/expo-application/-/expo-application-2.4.1.tgz"
@@ -3009,7 +3031,7 @@
     "path-browserify" "^1.0.0"
     "url-parse" "^1.4.4"
 
-"expo-constants@~9.3.3":
+"expo-constants@*", "expo-constants@~9.3.3":
   "integrity" "sha512-qIlv2ffSjQl3wrvJwXYoNfQNfH/sK46EXcgyEQnQ1SAQO4ukwTEpG9j3fdW6aTiVEVrv/DsA1IaVRqKrUwSd3A=="
   "resolved" "https://registry.yarnpkg.com/expo-constants/-/expo-constants-9.3.5.tgz"
   "version" "9.3.5"
@@ -3040,12 +3062,12 @@
     "fbjs" "1.0.0"
     "fontfaceobserver" "^2.1.0"
 
-"expo-google-sign-in@~8.4.0":
-  "integrity" "sha512-7kf0Nsy+WSizJPIUUQIGK6qiKbpLRjm3YKrqREeGpYiebOyi51lWw78CM6ylcb+FN2vb9d/kTEzinAfTgsPQ7w=="
-  "resolved" "https://registry.npmjs.org/expo-google-sign-in/-/expo-google-sign-in-8.4.0.tgz"
-  "version" "8.4.0"
+"expo-google-app-auth@^8.1.4":
+  "integrity" "sha512-2hXZCXEo7Dg3SDcc73MDniL+tJdwUzeBxTvXTGpnTKNF3JakuehLnx9ALuuEU86MKvM49/a3FiflhfEiWZ5qDw=="
+  "resolved" "https://registry.npmjs.org/expo-google-app-auth/-/expo-google-app-auth-8.1.4.tgz"
+  "version" "8.1.4"
   dependencies:
-    "invariant" "^2.2.4"
+    "expo-app-auth" "~9.3.0"
 
 "expo-keep-awake@~8.4.0":
   "integrity" "sha512-gozpL5Azfaht/YIMFOHRHjHuJ9KT6hJH4y71Al+/YfQSwHS5sqhoKGPgSxaktqbxRrWVUH9q7wSl3EXRK9bYjA=="
@@ -5297,12 +5319,6 @@
   dependencies:
     "dotenv" "^8.0.0"
 
-"react-native-google-drive-api-wrapper@joshspicer/react-native-google-drive-api-wrapper":
-  "resolved" "git+ssh://git@github.com/joshspicer/react-native-google-drive-api-wrapper.git#258414a802adad1fea21e9f907b0caf9d8a45c61"
-  "version" "1.2.0"
-  dependencies:
-    "simple-common-utils" "latest"
-
 "react-native-safe-area-context@3.1.9":
   "integrity" "sha512-wmcGbdyE/vBSL5IjDPReoJUEqxkZsywZw5gPwsVUV1NBpw5eTIdnL6Y0uNKHE25Z661moxPHQz6kwAkYQyorxA=="
   "resolved" "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.1.9.tgz"
@@ -5330,7 +5346,7 @@
     "prop-types" "^15.6.0"
     "react-timer-mixin" "^0.13.4"
 
-"react-native@*", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz":
+"react-native@*", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz":
   "version" "0.63.2"
   dependencies:
     "@babel/runtime" "^7.0.0"
@@ -5371,7 +5387,7 @@
   "resolved" "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
   "version" "0.13.4"
 
-"react@*", "react@^16.13.1", "react@^16.8.0 || ^17.0.0", "react@>=16.5.1", "react@16.13.1":
+"react@*", "react@^16.13.1", "react@^16.8.0 || ^17.0.0", "react@>=16.5.1", "react@~16.8.6 || ~16.9.0 || ~16.11.0 || ~16.13.1 || ~17.0.1", "react@16.13.1":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz"
   "version" "16.13.1"
@@ -5731,11 +5747,6 @@
   "integrity" "sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA=="
   "resolved" "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz"
   "version" "3.0.3"
-
-"simple-common-utils@latest":
-  "integrity" "sha512-ffTqWrTO0U2/V5exLTl3ex/3Wt15dzhaD2vN0+EBUGx98OI0h6V6Y1qAEm4hyATwuVFU+Q3jewW2hAtFVN39kg=="
-  "resolved" "https://registry.npmjs.org/simple-common-utils/-/simple-common-utils-2.2.0.tgz"
-  "version" "2.2.0"
 
 "simple-plist@^1.0.0", "simple-plist@^1.1.0":
   "integrity" "sha512-pKMCVKvZbZTsqYR6RKgLfBHkh2cV89GXcA/0CVPje3sOiNOnXA8+rp/ciAMZ7JRaUdLzlEM6JFfUn+fS6Nt3hg=="
@@ -6184,7 +6195,7 @@
   "resolved" "https://registry.yarnpkg.com/unimodules-camera-interface/-/unimodules-camera-interface-5.4.0.tgz"
   "version" "5.4.0"
 
-"unimodules-constants-interface@~5.4.0":
+"unimodules-constants-interface@*", "unimodules-constants-interface@~5.4.0":
   "integrity" "sha512-6oqSt9zuI+dES56TABBi390FkVCozTN+hYfX0Kf6HdlnDpXTQqKZNfyWQgP7E78dIyB9b0q+kH7kTLLq+HNfOQ=="
   "resolved" "https://registry.yarnpkg.com/unimodules-constants-interface/-/unimodules-constants-interface-5.4.0.tgz"
   "version" "5.4.0"
