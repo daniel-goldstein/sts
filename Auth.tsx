@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Text,
-  Alert
-} from 'react-native';
+import { Alert } from 'react-native';
 import * as Google from 'expo-google-app-auth';
 import * as AppAuth from 'expo-app-auth';
 import Constants from 'expo-constants';
 import { IOS_CLIENT_ID, EXPO_IOS_CLIENT_ID } from '@env';
-import ScoreStopwatch from './Stopwatch';
+import { store, retrieve } from './Utils';
 
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
@@ -23,62 +19,65 @@ const refreshConfig = {
   scopes: SCOPES,
 };
 
-const Auth = () => {
-  const [user, setUser] = useState<Google.GoogleUser | null>(null);
-  const [accessToken, setAccessToken] = useState('');
-  const [refreshToken, setRefreshToken] = useState('');
-  const [tokenExpiration, setTokenExpiration] = useState(new Date());
+const storeUserInfo = async (
+  accessToken: string, refreshToken: string, tokenExpiration: Date
+) => {
+  await store('accessToken', accessToken);
+  await store('refreshToken', refreshToken);
+  await store('tokenExpiration', tokenExpiration);
+}
 
-  const refresh = async () => {
-    const res = await AppAuth.refreshAsync(refreshConfig, refreshToken);
-    if (res.refreshToken && res.accessToken && res.accessTokenExpirationDate) {
-      setRefreshToken(res.refreshToken);
-      setAccessToken(res.accessToken);
-      setTokenExpiration(new Date(Date.parse(res.accessTokenExpirationDate)));
-    } else {
-      Alert.alert(`Bad refresh: ${JSON.stringify(res)}`);
-    }
+const refresh = async (refreshToken: string) => {
+  const res = await AppAuth.refreshAsync(refreshConfig, refreshToken);
+  if (res.refreshToken && res.accessToken && res.accessTokenExpirationDate) {
+    await storeUserInfo(
+      res.accessToken,
+      res.refreshToken,
+      new Date(Date.parse(res.accessTokenExpirationDate))
+    );
+  } else {
+    Alert.alert(`Bad refresh: ${JSON.stringify(res)}`);
   }
+}
 
-  const mustRefresh = () => {
-    const tooLate = new Date();
-    tooLate.setMinutes(tooLate.getMinutes() + 10);
-    return tokenExpiration < tooLate;
-  }
+const mustRefresh = (tokenExpiration: Date) => {
+  const tooLate = new Date();
+  tooLate.setMinutes(tooLate.getMinutes() + 10);
+  return tokenExpiration < tooLate;
+}
 
-  const storeGoogleData = (res: Google.LogInResult) => {
+const signIn = async () => {
+  try {
+    /* await GoogleSignIn.askForPlayServicesAsync(); */ // TODO Android
+    const res = await Google.logInAsync(logInConfig);
     if (res.type === 'success') {
-      if (res.accessToken && res.refreshToken && res.user) {
-        setAccessToken(res.accessToken);
-        setRefreshToken(res.refreshToken);
-        setUser(res.user);
-        setTokenExpiration(new Date());
+      if (res.accessToken && res.refreshToken) {
+        storeUserInfo(res.accessToken, res.refreshToken, new Date());
       } else {
         Alert.alert(`Bad login: ${JSON.stringify(res)}`);
       }
     }
+  } catch ({ message }) {
+    Alert.alert(`Login failed: ${message}`);
   }
-
-  const signIn = async () => {
-    try {
-      /* await GoogleSignIn.askForPlayServicesAsync(); */ // TODO Android
-      storeGoogleData(await Google.logInAsync(logInConfig));
-    } catch ({ message }) {
-      Alert.alert(`Login failed: ${message}`);
-    }
-  }
-
-  useEffect(() => {
-    if (user && mustRefresh()) {
-      refresh();
-    }
-  });
-
-  if (user !== null) {
-    return <ScoreStopwatch accessToken={accessToken} />;
-  }
-
-  return <Text onPress={signIn}>Sign in</Text>;
 }
 
-export default Auth;
+const retrieveAccessToken = async (): Promise<string> => {
+  const refreshToken = await retrieve<string>('refreshToken');
+  const accessToken = await retrieve<string>('accessToken');
+  const tokenExpiration = await retrieve<Date>('tokenExpiration');
+
+  if (refreshToken === null || accessToken === null || tokenExpiration === null) {
+    await signIn();
+    return await retrieveAccessToken();
+  }
+
+  if (mustRefresh(tokenExpiration)) {
+    await refresh(refreshToken);
+    return await retrieveAccessToken();
+  }
+
+  return accessToken;
+}
+
+export default retrieveAccessToken;

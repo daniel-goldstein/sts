@@ -3,11 +3,12 @@ import { TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Dialog from 'react-native-dialog';
 import { uploadFile } from './GDrive';
+import retrieveAccessToken from './Auth';
 
 type UploadState = "idle" | "uploading" | "sending" | "completed";
 
-type UploadButtonProps = { uploadData: () => string, accessToken: string };
-const UploadButton = ({ uploadData, accessToken }: UploadButtonProps) => {
+type UploadButtonProps = { uploadData: () => string };
+const UploadButton = ({ uploadData }: UploadButtonProps) => {
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   const [uploadStatus, setUploadStatus] = useState("");
   const [filename, setFilename] = useState("");
@@ -24,7 +25,8 @@ const UploadButton = ({ uploadData, accessToken }: UploadButtonProps) => {
   const upload = async () => {
     setUploadState("sending");
 
-    if (accessToken != "") {
+    const accessToken = await retrieveAccessToken();
+    if (accessToken !== "") {
       const resp = await uploadFile(filename, uploadData(), accessToken);
       if (resp.status === 200) {
         setUploadStatus('Upload successful!');

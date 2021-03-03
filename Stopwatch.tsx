@@ -28,8 +28,7 @@ const Item = ({ title }: ItemProps) => {
   );
 }
 
-type ScoreStopwatchProps = { accessToken: string };
-const ScoreStopwatch = ({ accessToken }: ScoreStopwatchProps) => {
+const ScoreStopwatch = () => {
   const [timerGoing, setStopwatchGoing] = useState(false);
   const [timerReset, setStopwatchReset] = useState(false);
   const [pressStart, setPressStart] = useState<MaybeNumber>(0);
@@ -83,7 +82,7 @@ const ScoreStopwatch = ({ accessToken }: ScoreStopwatchProps) => {
   return (
     <View style={styles.container}>
 
-      <UploadButton accessToken={accessToken} uploadData={csvData} />
+      <UploadButton uploadData={csvData} />
       <CurrentPress start={pressStart} />
 
       <View style={styles.countContainer}>

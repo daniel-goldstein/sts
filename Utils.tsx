@@ -9,13 +9,17 @@ const store = async (key: string, value: Object) => {
   }
 }
 
-const retrieve = async (key: string) => {
+
+const retrieve = async <T, >(key: string): Promise<T | null> => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
-    return jsonValue ? JSON.parse(jsonValue) : null;
+    return jsonValue ? JSON.parse(jsonValue) as T : null;
   } catch (e) {
     Alert.alert(JSON.stringify(e));
   }
+
+  // This should never happen
+  return null;
 }
 
 export { store, retrieve };
