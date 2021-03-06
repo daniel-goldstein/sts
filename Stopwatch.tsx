@@ -9,7 +9,6 @@ import {
 import { Stopwatch } from 'react-native-stopwatch-timer';
 import { TrialDataList, Interval, Item } from './TrialDataList';
 import { fmtMillis } from './Utils';
-import UploadButton from './Upload';
 
 type MaybeNumber = number | null;
 
@@ -42,12 +41,6 @@ const ScoreStopwatch = ({ navigation }) => {
     }
   }
 
-  const csvData = () => {
-    const headers = 'start,end';
-    const data = presses.reverse().map(({ start, end }) => `${start},${end}`).join('\n');
-    return headers + '\n' + data;
-  }
-
   const CurrentPress = ({ start }: { start: MaybeNumber}) => {
     if (start) {
       return <Item title={`Started pressing at: ${fmtMillis(start)}`} />
@@ -58,10 +51,10 @@ const ScoreStopwatch = ({ navigation }) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      // TODO Fix right margin padding
-      headerRight: () => <UploadButton uploadData={csvData} />,
+      // TODO Perhaps abstract the upload button to have save and upload buttons
+      headerRight: () => <Button onPress={() => alert('saved')} title="Save"/>,
     });
-  }, [navigation]);
+  }, []);
 
   return (
     <View style={styles.bigContainer}>
