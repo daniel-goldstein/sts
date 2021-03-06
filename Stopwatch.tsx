@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   FlatList,
   ListRenderItem,
-  ScrollView
 } from 'react-native';
 import { Stopwatch } from 'react-native-stopwatch-timer';
 import UploadButton from './Upload';
@@ -80,46 +79,54 @@ const ScoreStopwatch = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.bigContainer}>
+      <View style={styles.container}>
 
-      <UploadButton uploadData={csvData} />
-      <CurrentPress start={pressStart} />
+        <UploadButton uploadData={csvData} />
+        <CurrentPress start={pressStart} />
 
-      <View style={styles.countContainer}>
-        <Stopwatch msecs
-          options={stopwatchOptions}
-          start={timerGoing}
-          reset={timerReset}
-          getMsecs={(time: number) => {currTime = time;}}/>
-        <Button 
-          title={!timerGoing ? "Start timer" : "Stop timer"}
-          onPress={toggleStopwatch}/>
-        <Button
-          title={'Reset timer'}
-          onPress={resetStopwatch}/>
+        <View style={styles.countContainer}>
+          <Stopwatch msecs
+            options={stopwatchOptions}
+            start={timerGoing}
+            reset={timerReset}
+            getMsecs={(time: number) => {currTime = time;}}/>
+          <Button 
+            title={!timerGoing ? "Start timer" : "Stop timer"}
+            onPress={toggleStopwatch}/>
+          <Button
+            title={'Reset timer'}
+            onPress={resetStopwatch}/>
 
-        <TouchableOpacity
-          style={styles.button}
-          disabled={!timerGoing}
-          onPressIn={startInterval}
-          onPressOut={endInterval}>
-          <Text style={styles.title}>Press me!!</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            disabled={!timerGoing}
+            onPressIn={startInterval}
+            onPressOut={endInterval}>
+            <Text style={styles.title}>Press me!!</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.timeList}>
+          <FlatList
+            data={presses}
+            renderItem={renderInterval}
+            keyExtractor={press => `${press.start}`}
+          />
+        </View>
+          
       </View>
-
-      <ScrollView style={styles.timeList}>
-        <FlatList
-          data={presses}
-          renderItem={renderInterval}
-          keyExtractor={press => `${press.start}`}
-        />
-      </ScrollView>
-        
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  bigContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: "center",
