@@ -27,7 +27,7 @@ const Item = ({ title }: ItemProps) => {
   );
 }
 
-const ScoreStopwatch = () => {
+const ScoreStopwatch = ({ navigation }) => {
   const [timerGoing, setStopwatchGoing] = useState(false);
   const [timerReset, setStopwatchReset] = useState(false);
   const [pressStart, setPressStart] = useState<MaybeNumber>(0);
@@ -78,11 +78,17 @@ const ScoreStopwatch = () => {
     return <Item title={``} />
   }
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      // TODO Fix right margin padding
+      headerRight: () => <UploadButton uploadData={csvData} />,
+    });
+  }, [navigation]);
+
   return (
     <View style={styles.bigContainer}>
       <View style={styles.container}>
 
-        <UploadButton uploadData={csvData} />
         <CurrentPress start={pressStart} />
 
         <View style={styles.countContainer}>
