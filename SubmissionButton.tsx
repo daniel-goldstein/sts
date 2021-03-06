@@ -7,8 +7,10 @@ type SubmitState = "idle" | "confirming" | "sending" | "completed";
 type SubmitButtonProps = {
   ButtonView: React.FC<{ onPress: () => void}>,
   submit: (name: string) => Promise<string>
+  confirmTitle: string,
+  confirmYes: string,
 };
-const SubmitButton = ({ ButtonView, submit }: SubmitButtonProps) => {
+const SubmitButton = ({ ButtonView, submit, confirmTitle, confirmYes }: SubmitButtonProps) => {
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [submitStatus, setSubmitStatus] = useState("");
   const [filename, setFilename] = useState("");
@@ -22,7 +24,7 @@ const SubmitButton = ({ ButtonView, submit }: SubmitButtonProps) => {
     setSubmitStatus("");
   }
 
-  const upload = async () => {
+  const submitAction = async () => {
     setSubmitState("sending");
     setSubmitStatus(await submit(filename));
     setSubmitState("completed");
@@ -39,13 +41,13 @@ const SubmitButton = ({ ButtonView, submit }: SubmitButtonProps) => {
       {submitState === "confirming" ?
       <View>
         <Dialog.Container visible={true}>
-          <Dialog.Title>Submit Data</Dialog.Title>
+          <Dialog.Title>{confirmTitle}</Dialog.Title>
           <Dialog.Description>
             Do you want to Score That Shit?
           </Dialog.Description>
           <Dialog.Input placeholder="filename" onChangeText={setFilename}/>
           <Dialog.Button label="Cancel" onPress={cancel}/>
-          <Dialog.Button label="Upload" onPress={upload}/>
+          <Dialog.Button label={confirmYes} onPress={submitAction}/>
         </Dialog.Container>
       </View>
       :

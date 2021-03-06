@@ -1,7 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import Dialog from 'react-native-dialog';
 import { uploadFile } from './GDrive';
 import retrieveAccessToken from './Auth';
 import SubmitButton from './SubmissionButton';
@@ -32,7 +31,11 @@ const UploadButton = ({ uploadData }: UploadButtonProps) => {
   };
 
   return (
-    <SubmitButton ButtonView={ButtonView} submit={upload} />
+    <SubmitButton
+      confirmTitle={'Upload Trial'}
+      confirmYes={'Upload'}
+      ButtonView={ButtonView}
+      submit={upload} />
   );
 }
 

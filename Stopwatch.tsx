@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Stopwatch } from 'react-native-stopwatch-timer';
 import { TrialDataList, Interval, Item } from './TrialDataList';
+import SaveButton from './Save';
 import { fmtMillis } from './Utils';
 
 type MaybeNumber = number | null;
@@ -51,8 +52,7 @@ const ScoreStopwatch = ({ navigation }) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      // TODO Perhaps abstract the upload button to have save and upload buttons
-      headerRight: () => <Button onPress={() => alert('saved')} title="Save"/>,
+      headerRight: () => <SaveButton saveData={() => presses}/>,
     });
   }, []);
 
