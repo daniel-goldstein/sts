@@ -5,27 +5,13 @@ import {
   View,
   Button,
   TouchableOpacity,
-  FlatList,
-  ListRenderItem,
 } from 'react-native';
 import { Stopwatch } from 'react-native-stopwatch-timer';
+import { TrialDataList, Interval, Item } from './TrialDataList';
+import { fmtMillis } from './Utils';
 import UploadButton from './Upload';
 
-type Interval = {
-  start: number,
-  end: number,
-};
-
 type MaybeNumber = number | null;
-
-type ItemProps = { title: string };
-const Item = ({ title }: ItemProps) => {
-  return (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-}
 
 const ScoreStopwatch = ({ navigation }) => {
   const [timerGoing, setStopwatchGoing] = useState(false);
@@ -60,14 +46,6 @@ const ScoreStopwatch = ({ navigation }) => {
     const headers = 'start,end';
     const data = presses.reverse().map(({ start, end }) => `${start},${end}`).join('\n');
     return headers + '\n' + data;
-  }
-
-  const fmtMillis = (msec: number) => `${msec / 1000}s`
-
-  const renderInterval: ListRenderItem<Interval> = ({ item }) => {
-    const start = fmtMillis(item.start);
-    const end = fmtMillis(item.end);
-    return <Item title={`Pressed: ${start} - ${end}`} />
   }
 
   const CurrentPress = ({ start }: { start: MaybeNumber}) => {
@@ -113,14 +91,8 @@ const ScoreStopwatch = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.timeList}>
-          <FlatList
-            data={presses}
-            renderItem={renderInterval}
-            keyExtractor={press => `${press.start}`}
-          />
-        </View>
-          
+        <TrialDataList presses={presses} />
+
       </View>
     </View>
   );
@@ -150,18 +122,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 10,
   },
-  item: {
-    backgroundColor: '#DDDDDD',
-    padding: 20,
-    marginVertical: 8,
-    width: '100%',
-  },
   title: {
     fontSize: 16,
     fontFamily: "HelveticaNeue",
-  },
-  timeList: {
-    height: '50%',
   },
 });
 
