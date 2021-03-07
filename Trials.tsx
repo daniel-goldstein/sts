@@ -15,7 +15,6 @@ export const TrialsList = ({ navigation }) => {
       'select trial_id, name, start, end from trials left join intervals on trials.id = intervals.trial_id',
       [])).rows;
 
-    console.log(intervals);
     let trials = new Map();
     for (let i = 0; i < intervals.length; i++) {
       const { trial_id, name, start, end } = intervals.item(i);

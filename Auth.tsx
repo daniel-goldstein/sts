@@ -52,7 +52,7 @@ const signIn = async () => {
     const res = await Google.logInAsync(logInConfig);
     if (res.type === 'success') {
       if (res.accessToken && res.refreshToken) {
-        storeUserInfo(res.accessToken, res.refreshToken, new Date());
+        await storeUserInfo(res.accessToken, res.refreshToken, new Date());
       } else {
         Alert.alert(`Bad login: ${JSON.stringify(res)}`);
       }
@@ -62,14 +62,26 @@ const signIn = async () => {
   }
 }
 
-const retrieveAccessToken = async (): Promise<string> => {
+const retrieveData = async () => {
   const refreshToken = await retrieve<string>('refreshToken');
   const accessToken = await retrieve<string>('accessToken');
   const tokenExpiration = await retrieve<Date>('tokenExpiration');
 
+  return { refreshToken, accessToken, tokenExpiration };
+}
+
+const retrieveAccessToken = async (): Promise<string> => {
+  const { refreshToken, accessToken, tokenExpiration } = await retrieveData();
+
   if (refreshToken === null || accessToken === null || tokenExpiration === null) {
     await signIn();
-    return await retrieveAccessToken();
+    const { accessToken } = await retrieveData();
+    // They must have cancelled
+    if (accessToken === null) {
+      return '';
+    } else {
+      return await retrieveAccessToken();
+    }
   }
 
   if (mustRefresh(tokenExpiration)) {

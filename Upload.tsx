@@ -15,7 +15,7 @@ const UploadButton = ({ uploadData }: UploadButtonProps) => {
       if (resp.status === 200) {
         return 'Upload successful!';
       } else {
-        return `Uh Oh! There was an error: ${resp.json()}`;
+        return `Uh Oh! There was an error: ${JSON.stringify(await resp.json())}`;
       }
     } else {
       return "Uh Oh! You weren't authenticated for some reason...";

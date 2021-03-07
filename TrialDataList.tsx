@@ -27,6 +27,7 @@ export const TrialDataList = ({ presses }: TrialDataListProps) => {
   return (
     <View>
       <FlatList
+        style={styles.itemList}
         data={presses}
         renderItem={renderInterval}
         keyExtractor={press => `${press.start}`}
@@ -36,6 +37,9 @@ export const TrialDataList = ({ presses }: TrialDataListProps) => {
 }
 
 const styles = StyleSheet.create({
+  itemList: {
+    height: '100%',
+  },
   item: {
     backgroundColor: '#DDDDDD',
     padding: 20,

@@ -1,4 +1,4 @@
-const uploadFile = async (filename: string, data: string, accessToken: string) => {
+async function uploadFile(filename: string, data: string, accessToken: string) {
   const boundary = "foo_bar";
   const metadata = {
     name: filename

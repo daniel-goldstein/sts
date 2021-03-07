@@ -7,6 +7,7 @@ export const store = async (key: string, value: Object) => {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
+    console.log(e);
     Alert.alert(JSON.stringify(e));
   }
 }
@@ -17,9 +18,7 @@ export const retrieve = async <T, >(key: string): Promise<T | null> => {
     const jsonValue = await AsyncStorage.getItem(key);
     return jsonValue ? JSON.parse(jsonValue) as T : null;
   } catch (e) {
-    Alert.alert(JSON.stringify(e));
+    console.log(e);
+    return null;
   }
-
-  // This should never happen
-  return null;
 }

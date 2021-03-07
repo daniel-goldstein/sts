@@ -10,6 +10,7 @@ const csvData = (intervals: Interval[]) => {
 }
 
 export const TrialDataScreen = ({ route, navigation }) => {
+  const trial: Trial = route.params.trial;
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -18,9 +19,7 @@ export const TrialDataScreen = ({ route, navigation }) => {
     });
   }, [route]);
 
-  const trial: Trial = route.params.trial;
   return (
     <TrialDataList presses={trial.intervals} />
   );
 };
-
