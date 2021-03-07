@@ -8,24 +8,35 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('sts-db');
 
-const initDb = () => {
-  db.transaction((tx) => {
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS trials (id integer primary key not null, name text)`
-    );
-    tx.executeSql(
+const executeSql = async (sql: string) => {
+  await new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(sql, [], resolve, (_, error) => {
+        console.log(error); reject(); return false });
+    });
+  });
+}
+
+const initDb = async () => {
+  await executeSql(
+    `CREATE TABLE IF NOT EXISTS trials (id integer primary key not null, name text)`
+  );
+  await executeSql(
 `CREATE TABLE IF NOT EXISTS intervals (
   id integer primary key not null,
-  FOREIGN KEY(trial_id) REFERENCES trials(id),
-  start integer, end integer
+  start integer not null,
+  end integer not null,
+  trial_id integer not null,
+  FOREIGN KEY(trial_id) REFERENCES trials(id)
 )`
-    );
-  });
+  );
 }
 
 const Stack = createStackNavigator();
 export default function App() {
-  React.useEffect(initDb, []);
+  React.useEffect(() => {
+    (async function iife() { await initDb() })()
+  }, []);
 
   return (
     <NavigationContainer>

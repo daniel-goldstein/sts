@@ -10,23 +10,28 @@ type SaveButtonProps = { saveData: () => Interval[] };
 const SaveButton = ({ saveData }: SaveButtonProps) => {
 
   const save = async (trialName: string): Promise<string> => {
-    let data = saveData();
-    let response = "";
-    db.transaction((tx) => {
+    const intervals = saveData();
+    return await new Promise<string>((resolve, reject) => {
       let trialId = 0;
-      tx.executeSql(`INSERT INTO trials (name) values (?)`,
-                    [trialName], (_, { insertId }) => {
-        trialId = insertId;
-      });
-      data.forEach(interval => {
-        tx.executeSql(`INSERT INTO intervals (trial_id, start, end) values (?, ?, ?)`,
-                     [trialId, interval.start, interval.end]);
-      });
-    },
-    (error) => { response = error.message; },
-    () => { response = 'Save succeeded'; });
+      let numInserted = 0;
+      db.transaction(tx => {
+        tx.executeSql(
+          `insert into trials (name) values (?)`, [trialName],
+          (_, { insertId }) => { trialId = insertId; },
+          (_, error) => { console.log(error); reject(error); return false }
+        );
 
-    return response;
+        for (const interval of intervals) {
+          tx.executeSql(
+            `insert into intervals (trial_id, start, end) values (?, ?, ?)`,
+            [trialId, interval.start, interval.end],
+            () => { numInserted += 1; },
+            (_, error) => { console.log(error); reject(error); return false }
+          );
+        }
+      });
+      resolve(`Saved trial with id: ${trialId} with ${numInserted} intervals`);
+    });
   }
 
   const ButtonView = ({ onPress }) => {

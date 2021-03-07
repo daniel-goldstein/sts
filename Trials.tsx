@@ -14,25 +14,27 @@ export const TrialsList = ({ navigation }) => {
 
   const unmarshalTrials = (data: SQLite.SQLResultSetRowList) => {
     let trials = new Map();
-    for (let i = 0; i < data.length; i++) {
-      const { id, name, start, end } = data.item(i);
-      const interval = { start, end };
-      if (trials.get(id) !== undefined) {
-        trials.set(id, { id, name, intervals: [interval] });
-      } else {
-        trials.get(id).intervals.push(interval);
-      }
-    }
+    console.log(data);
+    /* for (let i = 0; i < data.length; i++) { */
+    /*   const { id, name, start, end } = data.item(i); */
+    /*   const interval = { start, end }; */
+    /*   if (trials.get(id) === undefined) { */
+    /*     trials.set(id, { id, name, intervals: [interval] }); */
+    /*   } else { */
+    /*     trials.get(id).intervals.push(interval); */
+    /*   } */
+    /* } */
 
-    setTrials(Array.from(trials.values()));
+    /* setTrials(Array.from(trials.values())); */
   };
 
   const loadTrials = () => {
     db.readTransaction((tx) => {
-      tx.executeSql(`
-SELECT * from trials LEFT JOIN intervals
-ON trials.id = intervals.trial_id`, [], (_, { rows }) => { unmarshalTrials(rows); });
-    });
+      tx.executeSql(`SELECT * from trials`, [], (_, { rows }) => { unmarshalTrials(rows); });
+    }, (error) => { console.log(error); }, () => {});
+    db.readTransaction((tx) => {
+      tx.executeSql(`SELECT * from intervals`, [], (_, { rows }) => { unmarshalTrials(rows); });
+    }, (error) => { console.log(error); }, () => {});
   }
 
   React.useEffect(loadTrials, []);
