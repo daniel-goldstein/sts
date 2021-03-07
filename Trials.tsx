@@ -3,15 +3,39 @@ import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View, FlatList, ListRenderItem } from 'react-native';
 import { Interval } from './TrialDataList';
+import * as SQLite from 'expo-sqlite';
 
-// TODO Put uuid, or actually, this will go into sqlite probably so... idk?
-export type Trial = { name: string, intervals: Interval[] };
-const fake_data = [
-  { name: "Hello", intervals: [{ start: 0, end: 1}, { start: 2, end: 3}]},
-  { name: "Goodbye", intervals: [{ start: 4, end: 7}] },
-];
+const db = SQLite.openDatabase('sts-db');
+
+export type Trial = { id: number, name: string, intervals: Interval[] };
 
 export const TrialsList = ({ navigation }) => {
+  const [trials, setTrials] = React.useState<Trial[]>([]);
+
+  const unmarshalTrials = (data: SQLite.SQLResultSetRowList) => {
+    let trials = new Map();
+    for (let i = 0; i < data.length; i++) {
+      const { id, name, start, end } = data.item(i);
+      const interval = { start, end };
+      if (trials.get(id) !== undefined) {
+        trials.set(id, { id, name, intervals: [interval] });
+      } else {
+        trials.get(id).intervals.push(interval);
+      }
+    }
+
+    setTrials(Array.from(trials.values()));
+  };
+
+  const loadTrials = () => {
+    db.readTransaction((tx) => {
+      tx.executeSql(`
+SELECT * from trials LEFT JOIN intervals
+ON trials.id = intervals.trial_id`, [], (_, { rows }) => { unmarshalTrials(rows); });
+    });
+  }
+
+  React.useEffect(loadTrials, []);
 
   const RenderTrial: ListRenderItem<Trial> = ({ item }) => {
     return (
@@ -25,7 +49,7 @@ export const TrialsList = ({ navigation }) => {
     <>
       <View style={styles.container}>
         <FlatList
-          data={fake_data}
+          data={trials}
           renderItem={RenderTrial}
           keyExtractor={trial => `${trial.name}`}
         />
