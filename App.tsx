@@ -4,18 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Stopwatch from './Stopwatch';
 import { TrialsList } from './Trials';
 import { TrialDataScreen } from './TrialDataScreen';
-import * as SQLite from 'expo-sqlite';
+import { executeSql } from './Db';
 
-const db = SQLite.openDatabase('sts-db');
-
-const executeSql = async (sql: string) => {
-  await new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(sql, [], resolve, (_, error) => {
-        console.log(error); reject(); return false });
-    });
-  });
-}
 
 const initDb = async () => {
   await executeSql(

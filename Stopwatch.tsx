@@ -54,7 +54,7 @@ const ScoreStopwatch = ({ navigation }) => {
     navigation.setOptions({
       headerRight: () => <SaveButton saveData={() => presses}/>,
     });
-  }, []);
+  }, [presses]);
 
   return (
     <View style={styles.bigContainer}>
@@ -84,7 +84,9 @@ const ScoreStopwatch = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <TrialDataList presses={presses} />
+        <View style={{ height: '50%' }}>
+          <TrialDataList presses={presses} />
+        </View>
 
       </View>
     </View>

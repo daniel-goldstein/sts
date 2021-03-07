@@ -3,41 +3,37 @@ import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View, FlatList, ListRenderItem } from 'react-native';
 import { Interval } from './TrialDataList';
-import * as SQLite from 'expo-sqlite';
+import { executeSql } from './Db';
 
-const db = SQLite.openDatabase('sts-db');
-
-export type Trial = { id: number, name: string, intervals: Interval[] };
+export type Trial = { trial_id: number, name: string, intervals: Interval[] };
 
 export const TrialsList = ({ navigation }) => {
   const [trials, setTrials] = React.useState<Trial[]>([]);
 
-  const unmarshalTrials = (data: SQLite.SQLResultSetRowList) => {
+  const loadTrials = async () => {
+    const intervals = (await executeSql(
+      'select trial_id, name, start, end from trials left join intervals on trials.id = intervals.trial_id',
+      [])).rows;
+
+    console.log(intervals);
     let trials = new Map();
-    console.log(data);
-    /* for (let i = 0; i < data.length; i++) { */
-    /*   const { id, name, start, end } = data.item(i); */
-    /*   const interval = { start, end }; */
-    /*   if (trials.get(id) === undefined) { */
-    /*     trials.set(id, { id, name, intervals: [interval] }); */
-    /*   } else { */
-    /*     trials.get(id).intervals.push(interval); */
-    /*   } */
-    /* } */
+    for (let i = 0; i < intervals.length; i++) {
+      const { trial_id, name, start, end } = intervals.item(i);
+      const interval = { start, end };
+      if (trials.get(trial_id) === undefined) {
+        trials.set(trial_id, { trial_id, name, intervals: [interval] });
+      } else {
+        trials.get(trial_id).intervals.push(interval);
+      }
+    }
 
-    /* setTrials(Array.from(trials.values())); */
-  };
-
-  const loadTrials = () => {
-    db.readTransaction((tx) => {
-      tx.executeSql(`SELECT * from trials`, [], (_, { rows }) => { unmarshalTrials(rows); });
-    }, (error) => { console.log(error); }, () => {});
-    db.readTransaction((tx) => {
-      tx.executeSql(`SELECT * from intervals`, [], (_, { rows }) => { unmarshalTrials(rows); });
-    }, (error) => { console.log(error); }, () => {});
+    setTrials(Array.from(trials.values()));
   }
 
-  React.useEffect(loadTrials, []);
+  // TODO Verify how often this needs to be called
+  React.useEffect(() => {
+    (async function iife() { await loadTrials() })()
+  }, []);
 
   const RenderTrial: ListRenderItem<Trial> = ({ item }) => {
     return (
@@ -53,7 +49,7 @@ export const TrialsList = ({ navigation }) => {
         <FlatList
           data={trials}
           renderItem={RenderTrial}
-          keyExtractor={trial => `${trial.name}`}
+          keyExtractor={trial => `${trial.trial_id}`}
         />
       </View>
       <TouchableOpacity

@@ -25,7 +25,7 @@ const renderInterval: ListRenderItem<Interval> = ({ item }) => {
 type TrialDataListProps = { presses: Interval[] };
 export const TrialDataList = ({ presses }: TrialDataListProps) => {
   return (
-    <View style={styles.timeList}>
+    <View>
       <FlatList
         data={presses}
         renderItem={renderInterval}
@@ -36,9 +36,6 @@ export const TrialDataList = ({ presses }: TrialDataListProps) => {
 }
 
 const styles = StyleSheet.create({
-  timeList: {
-    height: '50%',
-  },
   item: {
     backgroundColor: '#DDDDDD',
     padding: 20,
