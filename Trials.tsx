@@ -1,9 +1,10 @@
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View, FlatList, ListRenderItem } from 'react-native';
+import { Text, View, ListRenderItem } from 'react-native';
 import { Interval } from './TrialDataList';
 import { executeSql } from './Db';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 export type Trial = { trial_id: number, name: string, intervals: Interval[] };
 
@@ -46,7 +47,7 @@ export const TrialsList = ({ navigation }) => {
   return (
     <>
       <View style={styles.container}>
-        <FlatList
+        <SwipeListView
           data={trials}
           renderItem={RenderTrial}
           keyExtractor={trial => `${trial.trial_id}`}
