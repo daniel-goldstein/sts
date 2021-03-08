@@ -29,10 +29,11 @@ export const TrialsList = ({ navigation }) => {
     setTrials(Array.from(trials.values()));
   }
 
-  // TODO Verify how often this needs to be called
   React.useEffect(() => {
-    (async function iife() { await loadTrials() })()
-  }, []);
+    return navigation.addListener('focus', () => {
+      (async function iife() { await loadTrials() })()
+    });
+  }, [navigation]);
 
   const RenderTrial: ListRenderItem<Trial> = ({ item }) => {
     return (
