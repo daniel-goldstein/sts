@@ -34,6 +34,7 @@ const UploadButton = ({ uploadData }: UploadButtonProps) => {
     <SubmitButton
       confirmTitle={'Upload Trial'}
       confirmYes={'Upload'}
+      placeholder={'filename'}
       ButtonView={ButtonView}
       submit={upload} />
   );

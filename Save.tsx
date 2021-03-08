@@ -36,6 +36,7 @@ const SaveButton = ({ saveData }: SaveButtonProps) => {
     <SubmitButton
       confirmTitle={'Save Trial'}
       confirmYes={'Save'}
+      placeholder={'trial name'}
       ButtonView={ButtonView}
       submit={save} />
   );
