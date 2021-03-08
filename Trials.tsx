@@ -1,6 +1,6 @@
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { Text, View, ListRenderItem } from 'react-native';
 import { Interval } from './TrialDataList';
 import { executeSql } from './Db';
@@ -38,8 +38,39 @@ export const TrialsList = ({ navigation }) => {
 
   const RenderTrial: ListRenderItem<Trial> = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.push('Trial Data', { trial: item })}>
+      <TouchableHighlight onPress={() => navigation.push('Trial Data', { trial: item })}>
         <Text style={styles.item}>{item.name}</Text>
+      </TouchableHighlight>
+    );
+  }
+
+  // TODO Could perhaps just use SQLite cascade delete but meh
+  const deleteTrial = async (trialId: number) => {
+    await executeSql('delete from intervals where trial_id = ?', [trialId.toString()]);
+    await executeSql('delete from trials where id = ?', [trialId.toString()]);
+  }
+
+  const deleteTrialWithConfirmation = async (trial: Trial) => {
+    Alert.alert(
+      'Delete trial',
+      `Are you sure you want to delete trial ${trial.name}?`,
+      [
+        { text: 'Delete', onPress: async () => {
+          await deleteTrial(trial.trial_id);
+          await loadTrials();
+        }},
+        { text: 'Cancel', onPress: () => console.log('canceled'), style: 'cancel' },
+      ],
+      { cancelable: true },
+    );
+  }
+
+  const DeleteTrialButton: ListRenderItem<Trial> = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={styles.deleteTrialButton}
+        onPress={async () => await deleteTrialWithConfirmation(item)}>
+        <Text style={styles.textWhite}>Delete</Text>
       </TouchableOpacity>
     );
   }
@@ -50,6 +81,9 @@ export const TrialsList = ({ navigation }) => {
         <SwipeListView
           data={trials}
           renderItem={RenderTrial}
+          renderHiddenItem={DeleteTrialButton}
+          disableRightSwipe={true}
+          rightOpenValue={-75}
           keyExtractor={trial => `${trial.trial_id}`}
         />
       </View>
@@ -86,5 +120,18 @@ const styles = StyleSheet.create({
     height:70,
     backgroundColor:'#fff',
     borderRadius:100,
+  },
+  deleteTrialButton: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    width: 75,
+    backgroundColor: 'red',
+    right: 0,
+  },
+  textWhite: {
+    color: '#FFF',
   },
 });
