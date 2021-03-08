@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
 import Dialog from 'react-native-dialog';
 
 type SubmitState = "idle" | "confirming" | "sending" | "completed";
@@ -35,11 +34,9 @@ const SubmitButton = ({ ButtonView, submit, confirmTitle, confirmYes }: SubmitBu
     setSubmitStatus("");
   }
 
-  return (
-    <>
-      <ButtonView onPress={openConfirmationModal} />
-      {submitState === "confirming" ?
-      <View>
+  const renderDialog = () => {
+    if (submitState === "confirming") {
+      return (
         <Dialog.Container visible={true}>
           <Dialog.Title>{confirmTitle}</Dialog.Title>
           <Dialog.Description>
@@ -49,19 +46,22 @@ const SubmitButton = ({ ButtonView, submit, confirmTitle, confirmYes }: SubmitBu
           <Dialog.Button label="Cancel" onPress={cancel}/>
           <Dialog.Button label={confirmYes} onPress={submitAction}/>
         </Dialog.Container>
-      </View>
-      :
-      <View>
-        <Dialog.Container visible={submitState === "completed" || submitState === "sending"}>
-          {/* Awful hack */}
-          <Dialog.Title>{submitState === "idle" ? "" : submitState}</Dialog.Title>
-          <Dialog.Description>
-            {submitStatus}
-          </Dialog.Description>
+      );
+    } else if (submitState === "completed" || submitState === "sending") {
+      return (
+        <Dialog.Container visible={true}>
+          <Dialog.Title>{submitState}</Dialog.Title>
+          <Dialog.Description>{submitStatus}</Dialog.Description>
           <Dialog.Button label="Close" onPress={closeDialog}/>
         </Dialog.Container>
-      </View>
-      }
+      );
+    }
+  }
+
+  return (
+    <>
+      <ButtonView onPress={openConfirmationModal} />
+      {renderDialog()}
     </>
   );
 }
