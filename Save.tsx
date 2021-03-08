@@ -13,20 +13,17 @@ const SaveButton = ({ saveData }: SaveButtonProps) => {
     const { insertId } = await executeSql(
       'insert into trials (name) values (?)', [trialName]
     );
-    console.log(`Inserted trial with id ${insertId}`);
-    const trialId = insertId;
 
     let numInserted = 0;
     for (const interval of intervals) {
-      const { insertId } = await executeSql(
+      await executeSql(
         'insert into intervals (trial_id, start, end) values (?, ?, ?)',
-        [trialId.toString(), interval.start.toString(), interval.end.toString()]
+        [insertId.toString(), interval.start.toString(), interval.end.toString()]
       );
       numInserted += 1;
-      console.log(`Inserted interval with id ${insertId}`);
     }
 
-    return `Saved trial with id: ${trialId} with ${numInserted} intervals`;
+    return `Saved trial with id: ${insertId} with ${numInserted} intervals`;
   }
 
   const ButtonView = ({ onPress }) => {

@@ -58,7 +58,6 @@ const retrieveAccessToken = async (): Promise<string> => {
 
   const { refreshToken, accessToken, accessTokenExpirationDate } = userInfo;
   if (mustRefresh(accessTokenExpirationDate)) {
-    console.log('trying to refresh');
     await refresh(refreshToken);
     return await retrieveAccessToken();
   }
