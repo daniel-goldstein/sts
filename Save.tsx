@@ -9,6 +9,9 @@ const SaveButton = ({ saveData }: SaveButtonProps) => {
 
   const save = async (trialName: string): Promise<string> => {
     const intervals = saveData();
+    if (intervals.length == 0) {
+      return 'Nothing to save';
+    }
 
     const { insertId } = await executeSql(
       'insert into trials (name) values (?)', [trialName]
@@ -23,7 +26,7 @@ const SaveButton = ({ saveData }: SaveButtonProps) => {
       numInserted += 1;
     }
 
-    return `Saved trial with id: ${insertId} with ${numInserted} intervals`;
+    return `Saved trial ${trialName} with ${numInserted} intervals`;
   }
 
   const ButtonView = ({ onPress }) => {

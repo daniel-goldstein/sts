@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Dialog from 'react-native-dialog';
 
-type SubmitState = "idle" | "confirming" | "saving" | "completed";
+type SubmitState = "idle" | "confirming" | "submitting" | "completed";
 
 type SubmitButtonProps = {
   ButtonView: React.FC<{ onPress: () => void}>,
@@ -27,7 +27,7 @@ const SubmitButton = ({
   }
 
   const submitAction = async () => {
-    setSubmitState("saving");
+    setSubmitState("submitting");
     setSubmitStatus(await submit(name));
     setSubmitState("completed");
   }
@@ -50,7 +50,7 @@ const SubmitButton = ({
           <Dialog.Button label={confirmYes} onPress={submitAction}/>
         </Dialog.Container>
       );
-    } else if (submitState === "completed" || submitState === "saving") {
+    } else if (submitState === "completed" || submitState === "submitting") {
       return (
         <Dialog.Container visible={true}>
           <Dialog.Title>{submitState}</Dialog.Title>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -29,6 +30,19 @@ const ScoreStopwatch = ({ navigation }) => {
     setStopwatchGoing(false);
     setStopwatchReset(true);
     setPresses([]);
+  }
+
+  const resetStopwatchWithConfirmation = () => {
+    Alert.alert(
+      'Reset stopwatch?',
+      'All unsaved data will be lost',
+      [
+        { text: 'Reset', onPress: resetStopwatch },
+        { text: 'Cancel', onPress: () => console.log('canceled'), style: 'cancel' },
+      ],
+      { cancelable: true },
+    );
+
   }
 
   const startInterval = () => {
@@ -73,7 +87,7 @@ const ScoreStopwatch = ({ navigation }) => {
             onPress={toggleStopwatch}/>
           <Button
             title={'Reset timer'}
-            onPress={resetStopwatch}/>
+            onPress={resetStopwatchWithConfirmation}/>
 
           <TouchableOpacity
             style={styles.button}
