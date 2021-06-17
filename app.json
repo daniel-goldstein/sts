@@ -3,7 +3,7 @@
     "name": "sts",
     "slug": "sts",
     "privacy": "unlisted",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -18,7 +18,7 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "2",
+      "buildNumber": "1",
       "supportsTablet": true,
       "bundleIdentifier": "com.danielgoldsteincompany.sts",
       "config": {
