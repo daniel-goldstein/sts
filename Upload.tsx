@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { uploadFile } from './GDrive';
-import retrieveAccessToken from './Auth';
+import { retrieveAccessToken } from './Auth';
 import SubmitButton from './SubmissionButton';
 
 type UploadButtonProps = { uploadData: () => string };

@@ -4,6 +4,7 @@ import { Alert, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-n
 import { Text, View, ListRenderItem } from 'react-native';
 import { Interval } from './TrialDataList';
 import { executeSql } from './Db';
+import { LogoutButton } from './Auth';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 export type Trial = { trial_id: number, name: string, intervals: Interval[] };
@@ -31,6 +32,9 @@ export const TrialsList = ({ navigation }) => {
   }
 
   React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <LogoutButton />,
+    });
     return navigation.addListener('focus', () => {
       (async function iife() { await loadTrials() })()
     });

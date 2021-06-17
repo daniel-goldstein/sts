@@ -1,6 +1,9 @@
+import React from 'react';
 import { Alert } from 'react-native';
 import * as AppAuth from 'expo-app-auth';
 import Constants from 'expo-constants';
+import { TouchableOpacity } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { IOS_CLIENT_ID, EXPO_IOS_CLIENT_ID } from '@env';
 import { store, retrieve } from './Utils';
 
@@ -12,7 +15,7 @@ const appAuthConfig = {
   scopes: SCOPES,
 };
 
-const storeUserInfo = async (res: AppAuth.TokenResponse) => {
+const storeUserInfo = async (res: AppAuth.TokenResponse | null) => {
   await store('authData', res);
 }
 
@@ -21,11 +24,8 @@ const retrieveUserInfo = async () => {
 }
 
 const refresh = async (refreshToken: string) => {
-  try {
-    await storeUserInfo(await AppAuth.refreshAsync(appAuthConfig, refreshToken));
-  } catch ({ message }) {
-    Alert.alert(`Google auth refresh failed: ${message}`);
-  }
+  await storeUserInfo(await AppAuth.refreshAsync(appAuthConfig, refreshToken));
+  return true;
 }
 
 const signIn = async () => {
@@ -38,6 +38,20 @@ const signIn = async () => {
 
 const mustRefresh = (tokenExpiration: string) => {
   return new Date(tokenExpiration) < new Date();
+}
+
+const LogoutButton = () => {
+
+  const logout = async () => {
+    await storeUserInfo(null);
+    Alert.alert('Logged out!');
+  }
+
+  return (
+    <TouchableOpacity onPress={logout}>
+      <AntDesign name="logout" size={24} color="black" />
+    </TouchableOpacity>
+  );
 }
 
 const retrieveAccessToken = async (): Promise<string> => {
@@ -58,11 +72,17 @@ const retrieveAccessToken = async (): Promise<string> => {
 
   const { refreshToken, accessToken, accessTokenExpirationDate } = userInfo;
   if (mustRefresh(accessTokenExpirationDate)) {
-    await refresh(refreshToken);
-    return await retrieveAccessToken();
+    try {
+      await refresh(refreshToken);
+    } catch ({ message }) {
+      Alert.alert(`Google auth refresh failed: ${message}. Please sign out and sign back in.`);
+    }
   }
 
   return accessToken;
 }
 
-export default retrieveAccessToken;
+export {
+  retrieveAccessToken,
+  LogoutButton
+};

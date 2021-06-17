@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 
 export const fmtMillis = (msec: number) => `${msec / 1000}s`
 
-export const store = async (key: string, value: Object) => {
+export const store = async (key: string, value: Object | null) => {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
