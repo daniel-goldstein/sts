@@ -18,7 +18,7 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "1",
+      "buildNumber": "3",
       "supportsTablet": true,
       "bundleIdentifier": "com.danielgoldsteincompany.sts",
       "config": {
